@@ -60,3 +60,4 @@ Temporary Items
 /gradle
 *.gradle
 /proguard-rules.pro
+*.jks
