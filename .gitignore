@@ -61,3 +61,4 @@ Temporary Items
 *.gradle
 /proguard-rules.pro
 *.jks
+/android_login_api/nbproject/private/
