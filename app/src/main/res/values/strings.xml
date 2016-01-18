@@ -1,0 +1,30 @@
+<resources>
+     <!--Aplicativos e Chaves API-->
+    <string name="app_name" translatable="false">CSMobile</string>
+    <string name="banner_ad_unit_id" translatable="false">Inserir sua Key AdMob</string>
+
+    <!--Tela de Login e Registro-->
+    <string name="name">Nome</string>
+    <string name="hint_name">Nome</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Senha</string>
+    <string name="btn_login">Entrar</string>
+    <string name="btn_register">Registrar</string>
+    <string name="btn_link_to_register">Não é um membro? Registre agora</string>
+    <string name="btn_link_to_login">Já está Registrado! Entre agora</string>
+    <string name="semconexao">Sem conexão com a Internet!</string>
+    <string name="camposnulos">Por favor entre com as credenciais !</string>
+    <string name="entrando">Entrando &#8230;</string>
+    <string name="conectar">Conectar</string>
+
+    <!--Tela Principal-->
+    <string name="navigation_drawer_open">Abre a gaveta de navegação</string>
+    <string name="navigation_drawer_close">Fecha a gaveta de navegação</string>
+    <string name="action_search">Busca</string>
+    <string name="lbl_you_are_at">VOCE ESTÁ EM</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_about">Sobre</string>
+    <string name="menu_cafe">Pague-me um café!</string>
+    <string name="msg_cafe">O conteúdo deste APP foi útil para você? Então, me pague um café! :)</string>
+
+</resources>
