@@ -89,6 +89,17 @@ public class RegisterActivity extends Activity {
            finish();
        }
 
+        // Propaganadas do Google (Monetização)
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        // AdRequest adRequest = new AdRequest.Builder().build();
+        // Para Testes
+        //AdRequest.Builder.addTestDevice("ABCDEF012345");
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+
         // Evento do botão registar
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
