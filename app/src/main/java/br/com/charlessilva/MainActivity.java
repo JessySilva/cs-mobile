@@ -16,8 +16,11 @@ package br.com.charlessilva;
  * GitHub: https://github.com/silvacharles
  */
 
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +33,8 @@ import android.util.Log;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // SQLite
     private SQLiteHandler db;
     private SessionManager session;
+
+    private static final int CHECK_PERMISSION_REQUEST_WRITE_STORAGE=51;
 
     // Evento de Criaçao
     @Override
@@ -119,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        // Inicia a verificação da permissão
+        checkPermissionWriteExtStorage(CHECK_PERMISSION_REQUEST_WRITE_STORAGE);
               }
 
    // Chamado quando retornar à atividade
@@ -179,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.acao_settings) {
 
-            Log.d(TAG,"Ação configurações clicada");
+            Log.d(TAG, "Ação configurações clicada");
 
         } else if (id == R.id.acao_busca) {
             Toast.makeText(getApplicationContext(), "Ação clicada", Toast.LENGTH_LONG).show();
@@ -212,5 +221,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+     // Método para checar permissão Gravação memória externa
+      private  boolean checkPermissionWriteExtStorage(int requestCode){
+        boolean res=true;
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                res=false;
+                requestPermissions( new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},requestCode);
+
+            }
+        }
+        return res;
+
+    }
+    // Método para obter o resultado se a permisão foi concedida
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CHECK_PERMISSION_REQUEST_WRITE_STORAGE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                 File sd = Environment.getExternalStorageDirectory();
+                    boolean isWritable=sd.canWrite();
+
+                    Log.d(TAG, "Gravação de armazenamento concedida. Armazenamento Gravável="+ isWritable);
+
+
+                } else {
+
+                    // permissão negada, vazia! Desative as
+                    // funcionalidades que depende dessa permissão.
+
+            }
+                return;
+            }
+
+            // outras linhas  alterar para verificar se há outras
+            // permissões para este APP
+        }
     }
 }
