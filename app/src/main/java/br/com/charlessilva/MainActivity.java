@@ -43,9 +43,6 @@ import br.com.charlessilva.biblioteca.SQLiteHandler;
 import br.com.charlessilva.biblioteca.SessionManager;
 
 
-import static com.google.android.gms.location.LocationServices.FusedLocationApi;
-
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // TAG Log - Logcat
@@ -80,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // txtName = (TextView) findViewById(R.id.name);
-        // txtEmail = (TextView) findViewById(R.id.email);
+         txtName = (TextView) findViewById(R.id.name);
+         txtEmail = (TextView) findViewById(R.id.email);
 
         Log.d(TAG, "Layout da Gaveta de navegação iniciado MainActivity ");
 

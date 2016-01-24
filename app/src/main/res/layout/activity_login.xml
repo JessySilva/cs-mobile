@@ -5,7 +5,7 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/md_green_800"
+    android:background="@color/md_cyan_400"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp" >
@@ -58,7 +58,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
-            android:background="@color/md_green_200"
+            android:background="@color/md_cyan_200"
             android:text="@string/btn_login"
             android:textColor="@color/md_black_1000" />
 
