@@ -27,13 +27,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 import android.content.Intent;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Elementos de Design
-    private TextView txtName;
+    private TextView txtNome;
     private TextView txtEmail;
 
     // SQLite
@@ -69,19 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Logs de Evento Criado
         Log.d(TAG, "Layout iniciado MainActivity!");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-         txtName = (TextView) findViewById(R.id.name);
-         txtEmail = (TextView) findViewById(R.id.email);
-
-        Log.d(TAG, "Layout da Gaveta de navegação iniciado MainActivity ");
-
         db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
         if (!session.isLoggedIn()) {
@@ -89,14 +77,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         HashMap<String, String> user = db.getUserDetails();
-        String name = user.get("name");
+        String nome = user.get("name");
         String email = user.get("email");
-
         Log.d(TAG, "Recebido dados do BD");
 
-        /*Log.d(TAG, "Exibindo Hora e Saudações");
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        // Adicioando Nome e Email na Header
+        View header = LayoutInflater.from(this).inflate(R.layout.nav_header_main, null);
+        navigationView.addHeaderView(header);
+        txtNome = (TextView) header.findViewById(R.id.nome);
+        txtEmail = (TextView) header.findViewById(R.id.email);
+        txtNome.setText("Olá: " + nome);
+        txtEmail.setText("Conectado: " + email);
+        Log.d(TAG, "Layout da Gaveta de navegação iniciado MainActivity ");
 
-        // Manipulando Data e Hora
+        /*// Manipulando Data e Hora
         SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
         Date data = new Date();
         Calendar cal = Calendar.getInstance();
@@ -116,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             txtName.setText("Boa Noite, " + name);
             txtEmail.setText("Conectado: " + email);
-        }*/
+        }
+        Log.d(TAG, "Exibindo Hora e Saudações");*/
 
     }
 
@@ -186,11 +188,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.acao_settings) {
 
             Log.d(TAG, "Ação configurações clicada");
+            return true;
 
         } else if (id == R.id.acao_busca) {
+
             Toast.makeText(getApplicationContext(), "Ação clicada", Toast.LENGTH_LONG).show();
+            return true;
+
         } else if (id == R.id.acao_sobre){
 
+            Log.d(TAG, "Ação Sobre clicada");
+
+            return true;
+        } else if (id == R.id.acao_sair){
+
+            logoutUser();
             return true;
         }
 

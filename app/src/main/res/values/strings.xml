@@ -21,9 +21,9 @@
     <string name="navigation_drawer_open">Abre a gaveta de navegação</string>
     <string name="navigation_drawer_close">Fecha a gaveta de navegação</string>
     <string name="action_search">Busca</string>
-    <string name="lbl_you_are_at">VOCE ESTÁ EM</string>
     <string name="action_settings">Configurações</string>
     <string name="action_about">Sobre</string>
+    <string name="action_sair">Sair</string>
     <string name="menu_cafe">Pague-me um café!</string>
     <string name="msg_cafe">O conteúdo deste APP foi útil para você? Então, me pague um café! :)</string>
 
