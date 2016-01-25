@@ -5,9 +5,9 @@
 
 
         <item
-            android:id="@+id/nav_buscar"
-            android:icon="@drawable/ic_search"
-            android:title="Buscar" />
+            android:id="@+id/nav_local"
+            android:icon="@drawable/ic_location_searching"
+            android:title="Meu Local" />
 
         <item
             android:id="@+id/nav_salvar"

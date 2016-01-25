@@ -16,12 +16,17 @@ package br.com.charlessilva;
  * GitHub: https://github.com/silvacharles
  */
 
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,17 +34,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.util.Log;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+
 import br.com.charlessilva.biblioteca.SQLiteHandler;
 import br.com.charlessilva.biblioteca.SessionManager;
 
@@ -57,7 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SQLiteHandler db;
     private SessionManager session;
 
-    private static final int CHECK_PERMISSION_REQUEST_WRITE_STORAGE=51;
+    // Google Maps
+    private GoogleMap googleMap;
+    public static LocationManager locationManager;
+
+    private static final int CHECK_PERMISSION_REQUEST_WRITE_STORAGE = 51;
 
     // Evento de Criaçao
     @Override
@@ -66,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            // Carrega mapa
+            inicializaMapa();
+            Log.d(TAG,"Inicializando Google Maps");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Logs de Evento Criado
         Log.d(TAG, "Layout iniciado MainActivity!");
@@ -127,13 +153,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         // Inicia a verificação da permissão
         checkPermissionWriteExtStorage(CHECK_PERMISSION_REQUEST_WRITE_STORAGE);
-              }
+        inicializaMapa();
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setRotateGesturesEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+    }
 
-   // Chamado quando retornar à atividade
+    // Chamado quando retornar à atividade
     @Override
     protected void onResume() {
         super.onResume();
-     }
+        inicializaMapa();
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setRotateGesturesEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+    }
 
     @Override
     protected void onStop() {
@@ -143,11 +181,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPause() {
         super.onPause();
-     }
+    }
 
     @Override
     public void onDestroy() {
-         super.onDestroy();
+        super.onDestroy();
+    }
+
+
+    /**
+     * Função camera zoom automatico com localização atual
+     * */
+    private void setUpMap() {
+
+        checkPermissionWriteExtStorage(CHECK_PERMISSION_REQUEST_WRITE_STORAGE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        LocationManager locationManager = MainActivity.locationManager;
+        Criteria criteria = new Criteria();
+
+        final Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude())) // Define o centro do mapa para localização do usuário
+                    .zoom(17)                   // Define o zoom
+                    .bearing(90)                // Define a orientação da câmara para leste
+                    .tilt(40)                   // Define a inclinação da câmara para 30 graus
+                    .build();                   // Cria uma CameraPosition para o construtor
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
+
+    }
+
+    /**
+     * Função carregar mapa. Se o mapa não é criado ele irá cria-lo para você
+     * */
+    private void inicializaMapa() {
+        if (googleMap == null) {
+            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
+                    R.id.map)).getMap();
+
+            // Checando se o map está criado ou não com sucesso
+            if (googleMap == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Desculpe! incapaz de criar mapas", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     /**
@@ -158,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         session.setLogin(false);
         db.deleteUsers();
         // Inicia a tela de Login
-        Log.d(TAG,"Tela de Login lançada");
+        Log.d(TAG, "Tela de Login lançada");
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -172,11 +262,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-     }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
@@ -217,8 +308,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_sair) {
             logoutUser();
-        } else if (id == R.id.nav_salvar) {
-            Log.d(TAG,"Ação salvar cliclada");
+        } else if (id == R.id.nav_local) {
+
+               setUpMap();
+
         } else if (id == R.id.nav_cafe){
             Log.d(TAG,"Abrindo navegador nativo no Android");
             // Redireciona para o PagSeugro
@@ -264,8 +357,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
 
-                    // permissão negada, vazia! Desative as
-                    // funcionalidades que depende dessa permissão.
+                    Log.d(TAG,"Permissão negada, vazia! Funções inativas");
 
             }
                 return;

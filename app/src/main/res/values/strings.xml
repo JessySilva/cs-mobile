@@ -1,7 +1,8 @@
 <resources>
      <!--Aplicativos e Chaves API-->
     <string name="app_name" translatable="false">CSMobile</string>
-    <string name="banner_ad_unit_id" translatable="false">Inserir sua Key AdMob</string>
+    <string name="ID_AdMob" translatable="false">Inserir sua Key AdMob</string>
+    <string name="APIGoogleMaps" translatable="false">Inserir sua Key GoogleMaps</string>
 
     <!--Tela de Login e Registro-->
     <string name="name">Nome</string>

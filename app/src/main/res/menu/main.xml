@@ -7,9 +7,12 @@
         android:title="@string/action_search"
         android:orderInCategory="100"
         android:icon="@drawable/ic_action_search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:label="Buscar"
+        android:hint="Buscar"
+        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
         app:showAsAction="ifRoom"/>
-    <!-- app:showAsAction="always"-->
+    <!-- app:showAsAction="always"
+     app:actionViewClass="android.support.v7.widget.SearchView"-->
 
     <item
         android:id="@+id/acao_settings"
