@@ -65,4 +65,4 @@ Temporary Items
 *.jks
 /android_login_api/nbproject/private/
 *.default.keyset
-*.keytore
+*.keystore
