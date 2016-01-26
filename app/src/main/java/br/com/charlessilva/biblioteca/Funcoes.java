@@ -41,7 +41,9 @@ package br.com.charlessilva.biblioteca;
 
 /* TODO: Gerando chaves e arquivo Keystore
  * keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
- * 79:75:1B:BC:0C:4B:89:63:AD:D9:9F:CF:E0:19:5B:5C:4D:F4:21:FC
+ * keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+ * keytool -v -keystore my-release-key.keystore -list
+ * Debug Key =  DF:A0:A4:AA:6D:4F:B2:AA:42:50:20:F6:7A:7C:8C:58:DA:91:BE:20
  *
  * */
 

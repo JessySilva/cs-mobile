@@ -26,8 +26,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,17 +48,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import br.com.charlessilva.biblioteca.SQLiteHandler;
 import br.com.charlessilva.biblioteca.SessionManager;
+import br.com.charlessilva.fragmentos.OneFragment;
+import br.com.charlessilva.fragmentos.ThreeFragment;
+import br.com.charlessilva.fragmentos.TwoFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GoogleMap googleMap;
     public static LocationManager locationManager;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     private static final int CHECK_PERMISSION_REQUEST_WRITE_STORAGE = 51;
 
     // Evento de Criaçao
@@ -83,6 +96,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Criando Visualização das Paginas
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+       // Criando Layouts da Tabs
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
 
         try {
             // Carrega mapa
@@ -148,30 +170,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**********
+     * Criando metodos VisualizarPaginas
+     * *********/
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new OneFragment(), "GPS");
+        adapter.addFragment(new TwoFragment(), "Mapas");
+        adapter.addFragment(new ThreeFragment(), "Lista");
+        viewPager.setAdapter(adapter);
+    }
+
+    /************
+     * Criando adaptação das Paginas
+     * ***********/
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         // Inicia a verificação da permissão
         checkPermissionWriteExtStorage(CHECK_PERMISSION_REQUEST_WRITE_STORAGE);
-        inicializaMapa();
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setRotateGesturesEnabled(true);
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
     }
 
     // Chamado quando retornar à atividade
     @Override
     protected void onResume() {
         super.onResume();
-        inicializaMapa();
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setRotateGesturesEnabled(true);
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
-    }
+      }
 
     @Override
     protected void onStop() {
@@ -195,7 +248,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setUpMap() {
 
         checkPermissionWriteExtStorage(CHECK_PERMISSION_REQUEST_WRITE_STORAGE);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
@@ -228,8 +283,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * */
     private void inicializaMapa() {
         if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.map)).getMap();
+            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setRotateGesturesEnabled(true);
+            googleMap.getUiSettings().setAllGesturesEnabled(true);
 
             // Checando se o map está criado ou não com sucesso
             if (googleMap == null) {
@@ -310,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logoutUser();
         } else if (id == R.id.nav_local) {
 
-               setUpMap();
+         //setUpMap();
 
         } else if (id == R.id.nav_cafe){
             Log.d(TAG,"Abrindo navegador nativo no Android");
