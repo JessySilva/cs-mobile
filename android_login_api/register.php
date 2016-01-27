@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<!--
+<?php
+
 /**
  *     / )|                                   |( \
  *    / / |         Charles Silva             | \ \
@@ -15,14 +15,7 @@
  * twitter: http://twitter.com/charlessilva_
  * GitHub: https://github.com/silvacharles
  */
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Android Login API</title>
-    </head>
-    <body>
-       <?php
+
  
 require_once 'include/DB_Functions.php';
 $db = new DB_Functions();
@@ -68,8 +61,3 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password'])
     echo json_encode($response);
 }
 ?>
-    </body>
-</html>
-
-
-
