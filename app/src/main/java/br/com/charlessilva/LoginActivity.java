@@ -39,6 +39,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import br.com.charlessilva.biblioteca.AnalyticsTrackers;
 import br.com.charlessilva.biblioteca.AppController;
 import br.com.charlessilva.biblioteca.AppConfig;
 import br.com.charlessilva.biblioteca.SQLiteHandler;
@@ -46,6 +48,11 @@ import br.com.charlessilva.biblioteca.SessionManager;
 import br.com.charlessilva.biblioteca.Funcoes;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.Tracker;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -66,6 +73,8 @@ public class LoginActivity extends Activity {
     private CoordinatorLayout coordinatorLayout;
     private AdView mAdView;
     private WifiManager AdministraWifi;
+    private static LoginActivity mInstance;
+
     // Chmando Funçoes na Package Biblioteca
     public Funcoes Funcoes = new Funcoes(this);
 
@@ -81,7 +90,14 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Criando contexo para Habilitar o WiFi
+        // Google Analytics
+        mInstance = this;
+        AnalyticsTrackers.initialize(this);
+        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+
+
+
+    // Criando contexo para Habilitar o WiFi
         AdministraWifi = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
          // Criando Laytou para Cordenada do Snackbar
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
@@ -169,6 +185,50 @@ public class LoginActivity extends Activity {
     });
 
 }
+
+    public static synchronized LoginActivity getInstance() {
+        return mInstance;
+    }
+
+    public synchronized Tracker getGoogleAnalyticsTracker() {
+        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
+        return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
+    }
+
+    public void trackScreenView(String screenName) {
+        Tracker t = getGoogleAnalyticsTracker();
+
+        // Set screen name.
+        t.setScreenName(screenName);
+
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
+
+
+    public void trackException(Exception e) {
+        if (e != null) {
+            Tracker t = getGoogleAnalyticsTracker();
+
+            t.send(new HitBuilders.ExceptionBuilder()
+                            .setDescription(
+                                    new StandardExceptionParser(this, null)
+                                            .getDescription(Thread.currentThread().getName(), e))
+                            .setFatal(false)
+                            .build()
+            );
+        }
+    }
+
+
+    public void trackEvent(String category, String action, String label) {
+        Tracker t = getGoogleAnalyticsTracker();
+
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
+    }
 
     //Função para verificar login e detalhes no mysql
     private void checkLogin(final String email, final String password) {
