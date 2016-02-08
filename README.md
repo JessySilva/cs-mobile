@@ -8,5 +8,6 @@
 * The project requires the SKD 6.0 + API 23 ( AppCompatActivity + Toolbar )
 * Utiliza API GoogleMaps com tabelas dentro do Material Design
 * Uses GoogleMaps API with tables within the Material Design
-
+* Adicionado monitoramento usando Google Analytics
+* Added monitoring using Google Analytics
 ## Em desenvolvimento / Under development<h6>
