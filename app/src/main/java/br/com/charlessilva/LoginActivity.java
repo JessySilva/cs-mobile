@@ -370,5 +370,6 @@ public class LoginActivity extends Activity {
             mAdView.destroy();
         }
         super.onResume();
+        LoginActivity.getInstance().trackScreenView("Tela Login");
     }
 }
