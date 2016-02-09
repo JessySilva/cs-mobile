@@ -10,4 +10,12 @@
 * Uses GoogleMaps API with tables within the Material Design
 * Adicionado monitoramento usando Google Analytics
 * Added monitoring using Google Analytics
+
+Screenshots
+-----------
+![Screenshot](Screenshot/Login.png)
+
+## License
+See [LICENSE](LICENSE)
+
 ## Em desenvolvimento / Under development<h6>
