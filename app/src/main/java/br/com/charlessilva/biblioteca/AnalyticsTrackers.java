@@ -28,6 +28,8 @@ public class AnalyticsTrackers {
         APP,
         // Add more trackers here if you need, and update the code in #get(Target) below
     }
+    // LogCat
+    private static final String TAG = AnalyticsTrackers.class.getSimpleName();
 
     private static AnalyticsTrackers sInstance;
 

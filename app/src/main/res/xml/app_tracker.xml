@@ -6,4 +6,6 @@
     <string name="ga_sampleFrequency">100.0</string>
     <bool name="ga_reportUncaughtExceptions">true</bool>
     <screenName name="br.com.charlessilva.LoginActivity">Tela Login</screenName>
+    <screenName name="br.com.charlessilva.MainActivity">Tela Principal</screenName>
+    <screenName name="br.com.charlessilva.RegisterActivity">Tela Registro</screenName>
 </resources>
