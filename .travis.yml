@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - openjdk7
+notifications:
+  email:
+    recipients:
+      - suporte@charlessilva.com.br
+    on_success: always
