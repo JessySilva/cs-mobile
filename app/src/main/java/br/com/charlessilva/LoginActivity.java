@@ -91,10 +91,11 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         // Google Analytics
-        mInstance = this;
-        AnalyticsTrackers.initialize(this);
-        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-
+       if (mInstance == null) {
+           mInstance = this;
+           AnalyticsTrackers.initialize(this);
+           AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+       }
 
 
     // Criando contexo para Habilitar o WiFi
