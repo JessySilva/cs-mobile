@@ -59,8 +59,8 @@ Temporary Items
 /build
 /captures
 *.apk
-/gradle
 *.gradle
+/gradle
 /proguard-rules.pro
 *.jks
 /android_login_api/nbproject/private/

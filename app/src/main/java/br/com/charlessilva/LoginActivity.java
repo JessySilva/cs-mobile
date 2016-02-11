@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -34,12 +33,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import br.com.charlessilva.biblioteca.AnalyticsTrackers;
 import br.com.charlessilva.biblioteca.AppController;
 import br.com.charlessilva.biblioteca.AppConfig;
@@ -52,7 +49,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -78,12 +74,8 @@ public class LoginActivity extends Activity {
     // Chmando Funçoes na Package Biblioteca
     public Funcoes Funcoes = new Funcoes(this);
 
-
     //Classe LogCat
     public static final String PREFS_NAME = "MinhasPref";
-
-    // Evento para Verificar se está Online
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -199,10 +191,10 @@ public class LoginActivity extends Activity {
     public void trackScreenView(String screenName) {
         Tracker t = getGoogleAnalyticsTracker();
 
-        // Set screen name.
+        // Definindo  nome da tela
         t.setScreenName(screenName);
 
-        // Send a screen view.
+        // Enviando exibição da tela
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         GoogleAnalytics.getInstance(this).dispatchLocalHits();
@@ -227,7 +219,7 @@ public class LoginActivity extends Activity {
     public void trackEvent(String category, String action, String label) {
         Tracker t = getGoogleAnalyticsTracker();
 
-        // Build and send an Event.
+        // Construir e enviar um evento.
         t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
     }
 
@@ -371,6 +363,8 @@ public class LoginActivity extends Activity {
             mAdView.destroy();
         }
         super.onResume();
+        // Google Analytics
         LoginActivity.getInstance().trackScreenView("Tela Login");
+        Log.d(TAG,"Exibindo o nome da tela no Google Analytics");
     }
 }
