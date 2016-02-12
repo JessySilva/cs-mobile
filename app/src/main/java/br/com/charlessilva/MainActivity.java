@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logoutUser();
         } else if (id == R.id.nav_local) {
 
-         //setUpMap();
+         setUpMap();
 
         } else if (id == R.id.nav_cafe){
             Log.d(TAG,"Abrindo navegador nativo no Android");
